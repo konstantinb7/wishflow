@@ -1,0 +1,7 @@
+{
+  "_comment": "Isolated claude-config for the reasoning-system agents. install.sh places it in CLAUDE_CONFIG_DIR (next to the instance) + symlinks .credentials.json for Claude auth. deny mcp__* cuts the Operator's PERSONAL connectors (n8n, Google Drive, etc.) that would otherwise be inherited from ~/.claude. Web is NOT cut — it's granted per role. See docs/setup-runbook.md.",
+  "permissions": {
+    "deny": ["mcp__*"]
+  },
+  "skipWorkflowUsageWarning": true
+}

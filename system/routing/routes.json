@@ -1,0 +1,59 @@
+{
+  "_comment": "Routes by task class (per the spec's 'Routing'). The COO classifies inline (class) → this config deterministically sets the mechanism and roles. Principle 1: builder(claude) ≠ Adversary/critics(codex). Principle 6: don't inflate a simple task.",
+  "_mechanism_note": "VERIFIABLE classes (simple/first_class/complex_irreversible) → NATIVE executionPolicy: builder = executor work-issue, reviewStages = sequential review stages (the runtime drives the tail + the remediation loop: a reviewer status≠done = a return to the builder). preStages (if any) go BEFORE the builder as separate subtasks. PRODUCT_CONVERGENCE → parallel ideation (native sibling subtasks without blocks) + a merge, since there's no objective oracle.",
+  "routes": {
+    "simple": {
+      "desc": "1 executor + an optional objective check (Principle 6 — don't inflate).",
+      "launchApproval": false,
+      "mechanism": "execution_policy",
+      "builder": "DivergentGenerator",
+      "reviewStages": [
+        { "role": "ObjectiveVerifier", "when": "verifiable" }
+      ],
+      "handoff": false
+    },
+    "first_class": {
+      "desc": "search+verify — where the system is strongest.",
+      "launchApproval": true,
+      "mechanism": "execution_policy",
+      "builder": "DivergentGenerator",
+      "reviewStages": [
+        { "role": "Adversary", "note": "codex ≠ builder(claude) — decorrelation (Principle 1); a critic with the right to return for rework" },
+        { "role": "ObjectiveVerifier" },
+        { "role": "Synthesizer" },
+        { "role": "SteelmanCritic" }
+      ],
+      "handoff": "on_trigger"
+    },
+    "complex_irreversible": {
+      "desc": "Rubric Audit BEFORE generation + the full review tail + a MANDATORY handoff.",
+      "launchApproval": true,
+      "mechanism": "execution_policy",
+      "preStages": [
+        { "role": "RubricAuditor", "note": "BEFORE the builder: an audit of criteria — protection against optimizing the wrong target" }
+      ],
+      "builder": "DivergentGenerator",
+      "reviewStages": [
+        { "role": "Adversary" },
+        { "role": "ObjectiveVerifier", "when": "verifiable" },
+        { "role": "ConsistencyChecker" },
+        { "role": "Synthesizer", "note": "divergence-preservation" },
+        { "role": "SteelmanCritic" }
+      ],
+      "handoff": "mandatory"
+    },
+    "product_convergence": {
+      "desc": "there's NO objective oracle → parallel ideation from different angles + disagreement-as-signal + the Operator's taste.",
+      "launchApproval": true,
+      "mechanism": "parallel",
+      "parallelGeneration": { "agents": ["DivergentGenerator", "Adversary"], "modes": ["triz", "lateral", "inversion", "analogy"] },
+      "mergeStages": [
+        { "role": "ConsistencyChecker", "note": "hard-barriers" },
+        { "role": "Synthesizer" }
+      ],
+      "handoff": "operator_arbiter"
+    }
+  },
+  "intake": ["SpecWriter", "SpecReviewer"],
+  "_intake_note": "The COO classifies inline first; then verifiable classes pass SpecWriter → SpecReviewer (BEFORE the route). For a simple task the spec-gate may be skipped (Principle 6, classify-first)."
+}

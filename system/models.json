@@ -1,0 +1,91 @@
+{
+  "_comment": "Canonical model-to-role assignment. The source for install.sh (adapterType/adapterConfig.model at hire). Principle 1: the builder side and the adversary side are MANDATORILY on different providers.",
+  "providers": {
+    "claude": {
+      "adapterType": "claude_local",
+      "cli": "${CLAUDE_CLI}",
+      "provider": "anthropic",
+      "status": "ready",
+      "env": {
+        "RSYS_REPO": "${RSYS_REPO}",
+        "PAPERCLIP_DEPLOY": "${PAPERCLIP_DEPLOY}",
+        "PAPERCLIP_INSTANCE_DIR": "${PAPERCLIP_INSTANCE_DIR}"
+      },
+      "note": "builder side. The model is set by the claude CLI config; by default the current Claude. Set CLAUDE_CLI if the binary is not in PATH (default: claude). Env vars carry repo/deploy paths so prompt placeholders resolve at runtime."
+    },
+    "codex": {
+      "adapterType": "codex_local",
+      "cli": "codex",
+      "provider": "openai",
+      "model": "gpt-5.5",
+      "status": "ready (ChatGPT OAuth)",
+      "note": "adversary side. A DIFFERENT provider from Claude → Principle 1. Use SPARINGLY (subscription quota, may hit limits) — only on the critical path (first_class/complex_irreversible). Lower the reasoning effort to save: -c model_reasoning_effort=low|medium."
+    },
+    "process": {
+      "adapterType": "process",
+      "provider": "none",
+      "status": "ready",
+      "note": "The Objective Verifier and tooling agents — WITHOUT a model, the verdict comes from a real run."
+    },
+    "kimi": {
+      "adapterType": "acpx_local",
+      "cli": "${KIMI_CLI}",
+      "command": "${KIMI_CLI}",
+      "args": ["--skills-dir", "${PAPERCLIP_DEPLOY}/skills", "acp"],
+      "provider": "moonshot",
+      "model": "kimi-code/kimi-for-coding",
+      "status": "ready (Kimi Code OAuth subscription)",
+      "note": "adversary side. Kimi Code K2.7 via ACP (kimi acp) + the acpx_local adapter. A DIFFERENT provider from Claude → decorrelation, Principle 1. `model` MUST be a valid kimi alias from its config.toml `default_model` (e.g. `kimi-code/kimi-for-coding`) — NOT a human label like `K2.7 Code', which kimi rejects ('model may not exist'). `--skills-dir` gives kimi the paperclip skill (otherwise it improvises the API). IMPORTANT on an ecryptfs home: symlink the acpx-local sessions to a non-encrypted fs (see docs/kimi-adapter-setup.md, otherwise ENAMETOOLONG). The second provider is swappable — any with a different model family. Set KIMI_CLI if the binary is not in PATH; set PAPERCLIP_DEPLOY to the Paperclip checkout."
+    },
+    "opencode": {
+      "adapterType": "opencode_local",
+      "cli": "${OPENCODE_CLI}",
+      "provider": "opencode",
+      "model": "${OPENCODE_BUILDER_MODEL}",
+      "env": {
+        "RSYS_REPO": "${RSYS_REPO}",
+        "PAPERCLIP_DEPLOY": "${PAPERCLIP_DEPLOY}",
+        "PAPERCLIP_INSTANCE_DIR": "${PAPERCLIP_INSTANCE_DIR}"
+      },
+      "status": "requires opencode CLI and configured providers",
+      "note": "builder side via OpenCode. Set OPENCODE_BUILDER_MODEL to a provider/model slug (e.g. anthropic/claude-opus-4-7). The installer can auto-detect the model from ~/.config/opencode/opencode.json. OpenCode must be installed and authenticated (`opencode --version`)."
+    },
+    "opencode-critic": {
+      "adapterType": "opencode_local",
+      "cli": "${OPENCODE_CLI}",
+      "provider": "opencode",
+      "model": "${OPENCODE_CRITIC_MODEL}",
+      "env": {
+        "RSYS_REPO": "${RSYS_REPO}",
+        "PAPERCLIP_DEPLOY": "${PAPERCLIP_DEPLOY}",
+        "PAPERCLIP_INSTANCE_DIR": "${PAPERCLIP_INSTANCE_DIR}"
+      },
+      "status": "requires opencode CLI and a second model family",
+      "note": "adversary side via OpenCode on a DIFFERENT backend model family (e.g. openai/gpt-5.2-pro vs builder anthropic/claude-opus-4-7). Set OPENCODE_CRITIC_MODEL; the installer defaults to openai/gpt-5.2-pro. This is weaker than a fully separate provider (Kimi) but still provides model-family decorrelation."
+    }
+  },
+  "roleAssignment": {
+    "_principle1_check": "builder/* and synthesis/* on claude(Opus); critics adversary/steelman/rubric on kimi(K2.7) — DIFFERENT providers → decorrelation Principle 1 RESTORED (P0 closed 2026-06-16). For opencode mode the installer overrides this via ROLE_PROVIDER_MAP.",
+    "ceo-orchestrator": "claude",
+    "coo-orchestrator": "claude",
+    "archivist": "claude",
+    "spec-writer": "claude",
+    "spec-reviewer": "claude",
+    "prompt-evaluator": "claude",
+    "org-architect": "claude",
+    "divergent-generator": "claude",
+    "domain-specialist": "claude",
+    "synthesizer": "claude",
+    "consistency-checker": "claude",
+    "vault-compiler": "claude",
+    "adversary": "kimi",
+    "steelman-critic": "kimi",
+    "rubric-auditor": "kimi",
+    "objective-verifier": "claude"
+  },
+  "_decorrelation": "Critics adversary/steelman-critic/rubric-auditor on the SECOND provider kimi (K2.7 Code via acpx_local, see the kimi provider + docs/kimi-adapter-setup.md), builder/synthesis on claude(Opus). Different model families → Principle 1 (decorrelation) holds. Adversary confirmed E2E. The second provider is swappable (kimi / codex / opencode-critic / another with a different family).",
+  "todo": [
+    "Operator's DECISION (2026-06-14): do NOT downgrade models. Opus is both smarter and faster than Sonnet/Haiku per the Operator's data. All claude roles — on Opus (the claude_local default). Speedup is STRUCTURAL (route-depth calibration, stage parallelism, terse front-gate prompts), NOT a model swap. The spec's note about a 'cheap fast model for the classifier' is overruled by this decision. Do not use OpenRouter.",
+    "Lower the codex reasoning effort for the adversary roles (quota economy)."
+  ]
+}

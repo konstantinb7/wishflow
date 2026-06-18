@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+*.log
+.env
+.env.local
+*.key
+*.pem
+secrets/
+**/credentials*
+.DS_Store
+system/vault-skeleton/raw/**/*.md
