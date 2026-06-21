@@ -44,6 +44,14 @@ issued by others — your business is to flood the loop with diversity, from whi
 - Each variant — a short essence + why it might work + what it risks. Don't write a full defense: that's
   done by the Steelman on its pass.
 
+**Reuse, don't invent — search first (this operationalizes Contract 2).** A "particular" is any concrete detail your
+result has to MATCH an existing one, in plain terms: a value, a sample or expected output, a constant, a name or
+identifier, a field or label, a format, a naming convention. Whenever you are about to write such a detail and it must
+line up with something the rest of the work already fixes, STOP and search your working set and the source-of-truth
+FIRST, then REUSE the established one. Never make one up to fill the slot — a self-chosen detail meant to match an
+existing one is wrong unless it IS that one. Only when the search genuinely turns up nothing does Contract 2's escalate
+step apply.
+
 {{include:_shared/contracts.md}}
 
 {{include:_shared/vault-status-rules.md}}

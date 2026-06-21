@@ -14,10 +14,18 @@ A return for rework is the NORMAL path, NOT an error and NOT a failure. You neve
 
 ### Contract 2 — An unknown mid-task (the order is STRICT)
 1. Classify the unknown: it's pulled from source of truth OR it requires an Operator decision.
-2. Pulled → you read product truth (documents/code/artifacts in the company's project-root). No human is involved.
-3. No artifact / the SoT is silent → **escalate to the Operator**. Not a guess.
-4. FORBIDDEN: pulling what's missing from your own weights and presenting it as fact. That is hallucination disguised
-   as enrichment. The un-pulled does not get a verified status. An honest escalation > a confident fabrication.
+2. Pulled → take it from product truth. If the fact sits in your immediate working set (the artifacts in your cwd),
+   read it there; if locating it needs the source-of-truth MAP or a surface beyond your immediate set, request it via the
+   COO from the **Archivist** (the locator role) — do NOT rummage foreign surfaces yourself and do NOT re-derive it. This
+   EXPLICITLY covers any concrete PARTICULAR the task leaves unspecified but your result must MATCH — a value, name,
+   identifier, parameter, threshold, format, or established convention (e.g. a fixture constant in code, a dosage on the
+   formulary in medicine, a citation in the record in law, a rate in the ledger in finance). Such a particular is almost
+   always ALREADY FIXED somewhere in the source-of-truth; find and REUSE it. Never invent a fresh one to fill the slot —
+   a self-chosen particular that is meant to match an existing one is wrong unless it IS that one.
+3. No artifact / the SoT is silent (a checkable Archivist "absent") → **escalate to the Operator**. Not a guess.
+4. FORBIDDEN: pulling what's missing from your own weights and presenting it as fact — inventing a particular (a
+   value/name/identifier) where the source-of-truth already fixes one is this exact violation. That is hallucination
+   disguised as enrichment. The un-pulled does not get a verified status. An honest escalation > a confident fabrication.
 
 ### Contract 3 — Completion or an honest failure
 Iterate to the DoD within budget. Then:
@@ -28,6 +36,25 @@ Iterate to the DoD within budget. Then:
   subset — see Contract 4): build and run a STRONGER check that exercises the real contract (dependents, the broader /
   held-out acceptance, the source-of-truth), not the named case alone. A narrow pass on a partial check is NOT done — it is
   a scope-mismatch signal (Contract 4), not success. Never ship the minimal symptom-fix on the strength of a shallow signal.
+- **Evidence must be anchored OUTSIDE the work being judged.** Writing your own tests/checks is good and expected — a check
+  counts as PROOF only when its expected values come from OUTSIDE that work: the spec/requirements, a standard/law of the
+  domain, an independent source, a held-out / out-of-sample case, or a property that must hold for ANY valid input (round-trip
+  / `decode(encode(x))==x`, idempotence, no-data-loss, conservation). A check whose expected values you took from your OWN
+  output — or from an arbitrary choice you invented — proves self-consistency, not correctness, and is NOT evidence (the same
+  flaw as over-fitting in science, a circular argument in law, an un-replicated result in medicine). Agreement among agents
+  with no independent grounds is consensus, not evidence. When you cannot independently confirm, do NOT stop and do NOT
+  rubber-stamp: FIRST manufacture independence — re-derive expected values from the spec, add the invariant + named edge cases
+  the requirements imply, exercise the real consumers, conform to the established standard, or try a different approach and
+  check the results converge. Only if independent evidence is genuinely unobtainable: **UNVERIFIED** + escalate the specific gap.
+- **A missing PARTICULAR is not a defect in your work — route it to retrieval, never grind the executor on it.** If a check
+  fails (or cannot be built) because a concrete particular your result must MATCH is missing — a value, identifier, threshold,
+  expected output, the figure on record — that is a source-of-truth gap, not a flaw in the deliverable: ground it via Contract
+  2 (read it from existing artifacts, or request it through the COO from the Archivist) and REUSE the established particular —
+  do NOT loop the executor and do NOT invent one. Only when the Archivist returns a checkable "absent" (the particular exists
+  nowhere in the source-of-truth and cannot be derived) is the held-out acceptance genuinely unconfirmable: then state what IS
+  proven (the contract, with evidence), name the exact missing particular, mark the external acceptance **UNCONFIRMED** (not
+  passed, not failed; lower `evidence_score`), and **escalate to the Operator/COO to ratify** — NEVER self-close to done,
+  never loop the executor on a particular that does not exist.
 - **Honest failure:** budget exhausted or the task is unsolvable on the available data. NOT a silent stop — a structured
   fail report (template `templates/fail-report.md`): which DoD item was not reached, the root cause (not a symptom),
   what you tried, whether enrichment from the SoT helped, what's needed to unblock. The fail report is written to the vault

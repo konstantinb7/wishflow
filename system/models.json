@@ -28,14 +28,14 @@
       "note": "The Objective Verifier and tooling agents — WITHOUT a model, the verdict comes from a real run."
     },
     "kimi": {
-      "adapterType": "acpx_local",
-      "cli": "${KIMI_CLI}",
-      "command": "${KIMI_CLI}",
-      "args": ["--skills-dir", "${PAPERCLIP_DEPLOY}/skills", "acp"],
+      "adapterType": "opencode_local",
+      "cli": "${OPENCODE_CLI}",
+      "command": "${OPENCODE_CLI}",
       "provider": "moonshot",
-      "model": "kimi-code/kimi-for-coding",
+      "model": "opencode-go/kimi-k2.7-code",
       "status": "ready (Kimi Code OAuth subscription)",
-      "note": "adversary side. Kimi Code K2.7 via ACP (kimi acp) + the acpx_local adapter. A DIFFERENT provider from Claude → decorrelation, Principle 1. `model` MUST be a valid kimi alias from its config.toml `default_model` (e.g. `kimi-code/kimi-for-coding`) — NOT a human label like `K2.7 Code', which kimi rejects ('model may not exist'). `--skills-dir` gives kimi the paperclip skill (otherwise it improvises the API). IMPORTANT on an ecryptfs home: symlink the acpx-local sessions to a non-encrypted fs (see docs/kimi-adapter-setup.md, otherwise ENAMETOOLONG). The second provider is swappable — any with a different model family. Set KIMI_CLI if the binary is not in PATH; set PAPERCLIP_DEPLOY to the Paperclip checkout."
+      "note": "adversary side. kimi K2.7 via OpenCode (opencode-go/kimi-k2.7-code) + opencode_local adapter — a FULL agentic critic on a different model family (decorrelation, Principle 1). Replaced acpx_local (broke on kimi 0.18: ACP session returns backend model no-access) and the process+kimi -p fallback (text-only, could not act as a review agent). OpenCode must be installed + authenticated; use the opencode-go provider (NOT zen).",
+      "dangerouslySkipPermissions": true
     },
     "opencode": {
       "adapterType": "opencode_local",

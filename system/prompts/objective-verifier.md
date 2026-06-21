@@ -39,6 +39,23 @@ In EITHER context: the run is REAL, the verdict from the exit code, output into 
 - The run is REAL, in the cwd. The verdict = the exit code, not an impression. Tests not found / won't run → that is NOT a pass:
   return to the builder with specifics (no test / import fails), not "looks ok at a glance."
 - The comment MUST contain: the command, the verdict (PASS/FAIL), the actual tail of the output. Without output the verdict is invalid.
+- **A run is evidence only if its expected values are anchored OUTSIDE the code under test.** Running the project's own
+  existing tests, or new tests whose expected values come from the SPEC/requirements, IS valid evidence — autotesting is
+  fine. But a check whose expected values were produced by the very code being verified — a happy-path that asserts the
+  implementation's own output, a reference file written to match it — is CIRCULAR: a green there proves nothing and is NOT
+  admissible as a PASS.
+- **Can't anchor it externally → first strengthen, then UNVERIFIED (never a self-mirroring PASS).** If the only runnable check
+  is circular: first try to build an independent one — a property that must hold for any input (round-trip
+  `decode(encode(x))==x`, idempotence, no-data-loss), the requirements' named edge cases, the real consumers of the code. If
+  an independent check genuinely cannot be built, return **UNVERIFIED** with the reason (to the builder / escalate) — "could
+  not independently verify" is a valid, required verdict; do NOT green-light.
+- **A failing check that needs a value ABSENT from the code is a source-of-truth gap, not a builder defect.** If the only
+  failures are expected values the implementation must MATCH (a test fixture's constants, an established naming/convention)
+  rather than logic errors, do NOT loop the builder and do NOT accept an invented value: those values almost always already
+  live in the project (its existing tests/examples/configs) — ground them via the Archivist (through the COO) and have the
+  fixture REUSE the established value. Only on a checkable Archivist "absent" is the held-out acceptance truly unconfirmable:
+  then issue the acceptance note — PROVEN (contract + evidence) / UNCONFIRMED-EXTERNAL (which value, why unreachable) /
+  escalate to the Operator to ratify — never a self-mirroring PASS, never an endless builder re-loop.
 - Closing the stage — by the standard review-participant protocol (the `paperclip` skill knows it): pass = move to `done`,
   fail = move to `in_progress` + a comment. Don't invent separate mechanics, don't dig into Paperclip's source.
 

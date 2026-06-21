@@ -57,6 +57,8 @@ check('COO handles scope-mismatch: re-classify up + gate on heavy promotion',
 check('COO skips the launch gate when class is explicit (no resume cycle)',
   /EXPLICIT class[\s\S]{0,400}SKIP the launch gate/i.test(coo));
 check('COO has the launch-approval gate (Step A1)', /Step A1 — Launch approval for HEAVY classes/.test(coo));
+check('COO hard-gate: router-not-doer, FORBIDDEN to implement deliverable on heavy classes',
+  /YOU ARE A ROUTER, NOT A DOER/.test(coo) && /ABSOLUTELY FORBIDDEN/i.test(coo) && /Mandatory self-check BEFORE/i.test(coo));
 check('COO forbids self-assigning lanes', /NEVER set .*assigneeAgentId.* to YOURSELF/i.test(coo));
 check('COO invariant: no self-produced result on heavy tasks (children-before-result)',
   /NEVER produce the deliverable[\s\S]{0,200}child\s+subtasks BEFORE any result/i.test(coo) && /0 children/i.test(coo));
@@ -68,6 +70,28 @@ check('CEO: approve→relay proceed, reject→honest stop (no auto-run-cheap)',
   /approve[\s\S]{0,80}proceed/i.test(ceo) && /reject[\s\S]{0,80}(stop|halt|not run|NOT woken|not woken)/i.test(ceo));
 check('CEO+COO handle the approval-resolution wake (event-driven, not polling)',
   /approval_approved/.test(ceo) && /approval_approved/.test(coo) && /EVENT-DRIVEN|event-driven/.test(ceo));
+
+// --- Evidence independence (verification must not be circular) ---
+const ov = render('objective-verifier.md');
+check('ObjectiveVerifier rejects circular self-checks but ALLOWS real autotesting',
+  /anchored OUTSIDE the code under test/i.test(ov) && /CIRCULAR/.test(ov) && /autotesting is\s+fine/i.test(ov));
+check('ObjectiveVerifier: cannot anchor → UNVERIFIED, not a self-mirroring PASS',
+  /UNVERIFIED/.test(ov) && /do NOT green-light/i.test(ov));
+check('Evidence-anchoring is a cross-cutting contract (reaches every role)',
+  /Evidence must be anchored OUTSIDE the work being judged/i.test(dg) &&
+  /self-consistency, not correctness/i.test(coo));
+check('Rule drives constructive retry, not paralysis (manufacture independence)',
+  /manufacture independence/i.test(dg) && /try a different approach/i.test(dg));
+check('evidence_score discounts circular self-checks and bare consensus',
+  /circular self-check\) does NOT count as evidence/i.test(ov));
+check('Contract 2 routes a missing PARTICULAR through the Archivist (REUSE, never invent)',
+  /Archivist/.test(dg) && /any concrete PARTICULAR/i.test(dg) && /REUSE it/i.test(dg) && /never invent a fresh one/i.test(dg));
+check('Contract 2 rule is DOMAIN-NEUTRAL (cross-domain examples, not software-only)',
+  /formulary/i.test(dg) && /citation/i.test(dg) && /ledger/i.test(dg));
+check('Contract 3: a missing particular is a retrieval gap, not a builder loop (no self-close to done)',
+  /missing PARTICULAR is not a defect in your work/i.test(dg) && /NEVER self-close to done/i.test(dg));
+check('ObjectiveVerifier: missing value = source-of-truth gap routed to the Archivist, not a builder loop',
+  /source-of-truth gap, not a builder defect/i.test(ov) && /Archivist/.test(ov) && /never an endless builder re-loop/i.test(ov));
 
 console.log(`\n${fail === 0 ? 'OK' : 'FAILED'}: ${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
