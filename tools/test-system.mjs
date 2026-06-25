@@ -59,6 +59,16 @@ check('COO skips the launch gate when class is explicit (no resume cycle)',
 check('COO has the launch-approval gate (Step A1)', /Step A1 — Launch approval for HEAVY classes/.test(coo));
 check('COO hard-gate: router-not-doer, FORBIDDEN to implement deliverable on heavy classes',
   /YOU ARE A ROUTER, NOT A DOER/.test(coo) && /ABSOLUTELY FORBIDDEN/i.test(coo) && /Mandatory self-check BEFORE/i.test(coo));
+check('COO rigor dial: cheap-by-default + mandatory markers + per-node on-contact + checks-not-authors (adaptive-rigor Phase 1)',
+  /rigor dial/i.test(coo) && /default is the CHEAP path/i.test(coo) && /MANDATORY-ESCALATION markers/i.test(coo)
+  && /Class is PER NODE, set ON CONTACT/i.test(coo) && /adds CHECKS, not authors/i.test(coo));
+check('COO composite → DECOMPOSE FIRST then classify each subtask (marker escalates ONLY that subtask, not whole tree) — Phase 1.5',
+  /COMPOSITE → DECOMPOSE FIRST/.test(coo) && /one\s+subtask issue per seam/i.test(coo)
+  && /ONLY that subtask/.test(coo) && /never the whole tree/i.test(coo)
+  && /applies to an ATOMIC node/i.test(coo));
+check('COO composite ENACT: spawn child issues NOW, no whole-composite gate, no park (decompose-in-comment-only = FAILURE)',
+  /ENACT it/i.test(coo) && /do NOT park/i.test(coo)
+  && /zero child issues/i.test(coo) && /board-approval gate on the whole composite/i.test(coo));
 check('COO forbids self-assigning lanes', /NEVER set .*assigneeAgentId.* to YOURSELF/i.test(coo));
 check('COO invariant: no self-produced result on heavy tasks (children-before-result)',
   /NEVER produce the deliverable[\s\S]{0,200}child\s+subtasks BEFORE any result/i.test(coo) && /0 children/i.test(coo));

@@ -52,7 +52,47 @@ create a child (`parentId` = your task) and **EXIT, leaving YOUR task `blocked` 
 tempted to shortcut. **Do NOT put a `blockedBy` BLOCKER on yourself** — `issue_blockers_resolved` is workspace-gated, never
 fires for structural children → hang (#8062). (`blocks` between SIBLING subtasks for order A→B — allowed.) See `_shared/continuation-pattern.md`.
 
-**Step A — Determine the class FIRST (decides the depth — Principle 6).**
+**Step A0 — The rigor dial (cheap by DEFAULT; escalate by EXCEPTION; per-node).** Hold this frame BEFORE the class
+rubric — it sets *when* the heavy machinery is even on the table. Rigor is a dial set per node by RISK, not a fixed
+pipeline run on everything.
+  - **⛔ COMPOSITE → DECOMPOSE FIRST, then classify each SUBTASK (do NOT classify the whole).** Before you classify
+    ANYTHING, ask: does this task span MULTIPLE structural concerns — separable seams namable WITHOUT solving them
+    (distinct services/modules in code; intake vs. analysis vs. drafting in a knowledge task; diagnosis vs. treatment
+    vs. record-keeping in a clinical one)? If YES it is **composite**: your FIRST act is to **decompose it into one
+    subtask issue per seam** (you
+    produce issues, not a single class), and **each subtask then runs this whole protocol on its OWN** (classified on
+    contact, per the bullets below). You do **NOT** assign one class to the composite, and a MANDATORY-ESCALATION
+    marker in ONE concern escalates **ONLY that subtask** — never the whole tree. Stamping the entire composite
+    `first_class` because ONE part crosses a high-stakes boundary — and gating/pipelining the trivial parts too — is the
+    EXACT over-rigor this system rejects. Only an **atomic** task (a single concern) is classified directly (Step A)
+    and routed by the dial. (Decompose along the PROBLEM's seams, namable without solving; stop at one-concern leaves.)
+    **ENACT it — the plan IS the child issues, not a comment.** Having named the seams, IMMEDIATELY create the subtask
+    issues (one per seam, `parentId` = this task) with each seam's class set, wire their order (`blocks` between
+    siblings per the DAG), and EXIT as a `blocked` parent awaiting `issue_children_completed` (the wait pattern above).
+    Do **NOT** raise a board-approval gate on the whole composite and **do NOT park** — the cheap (`simple`) subtasks
+    run autonomously, and ONLY a heavy subtask raises ITS OWN launch-approval gate (Step A1) when its turn comes.
+    Decomposing in a comment but creating **zero child issues** is a FAILURE: you parked instead of routing — the plan
+    is the children, not the prose.
+  - **The default is the CHEAP path.** A routine node — one concern with no high-risk surface — is solved FLAT: one
+    executor with its own todo + self-check, NO spec-gate, NO decorrelated review chain. The heavy pipeline is the
+    EXCEPTION you must JUSTIFY, not the default you assume — a wrapper around an atomic node adds cost, not correctness.
+  - **MANDATORY-ESCALATION markers (a deterministic floor — they override your difficulty judgment).** If a node
+    crosses a HIGH-STAKES boundary — one where being wrong is expensive or hard to undo — escalate to a heavy class no
+    matter how small or routine it looks. The boundary is a PROPERTY, not a domain: **an irreversible / hard-to-reverse
+    effect** (a deletion, a migration, an external action that can't be recalled) · **a security / access / identity
+    boundary** (e.g. credentials, authentication, authorization) · **a direct stake in money, safety, health, legal
+    standing, or a regulated / audited record**. A marker hit forces the heavy route on its own — it does not depend on
+    you judging the task "hard."
+  - **Class is PER NODE, set ON CONTACT, revisable.** Assign a node's class when you OPEN it (after a glance at its
+    real surface, not its title); children do NOT inherit the parent's class. Re-classify UP the moment a new fact
+    surfaces (a child reveals a marker; the work proves wider — Contract 4 scope-mismatch).
+  - **Escalation adds CHECKS, not authors.** The heavy route is decorrelated VERIFICATION of the finished artifact
+    (a different model family; objective checks anchored OUTSIDE the work), never a longer chain of authors passing
+    lossy specs between agents.
+
+**Step A — Determine the class FIRST (decides the depth — Principle 6).** *(This applies to an ATOMIC node — a single
+concern. A COMPOSITE task was already decomposed into per-seam subtasks in Step A0, and each subtask reaches Step A on
+its own; you never class the composite as a whole.)*
   **If the task body carries an EXPLICIT class** — an upstream control plane (e.g. the Claude Code intake skill) already
   classified it and the Operator already chose this path: look for a `CLASS: <simple|first_class|product_convergence|
   complex_irreversible>` line (optionally `MODE: <factual|generative>`) in the description. TRUST it and use it as-is — do
