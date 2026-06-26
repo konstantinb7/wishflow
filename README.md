@@ -5,6 +5,18 @@
 
 ---
 
+## Quick start — one line
+
+Paste this into your AI coding agent — **Claude Code** or **OpenCode** — and let it do the rest:
+
+```
+Install the system following https://raw.githubusercontent.com/konstantinb7/wishflow/main/INSTALL.md
+```
+
+Your agent preflights the environment, installs Paperclip if missing, deploys the reasoning system, runs a smoke check, and hands you a working pipeline. Details in `INSTALL.md`; value priorities in `ROADMAP.md`.
+
+---
+
 ## Why hire it
 
 A single top model is fast and often right. But when it's wrong, it's wrong **confidently** — and on high-stakes, irreversible tasks that confident error is expensive: you don't see it until it's too late.
@@ -107,18 +119,6 @@ These are not settings — they are the substance of reliability. If a configura
 ## Status
 
 Config-as-code, deployed with a single command. The role core, decorrelation, objective verification, the Learning Loop, and controlled self-extension are assembled and pass end-to-end acceptance on the reference stand.
-
----
-
-## Quick start
-
-Point your AI coding agent — **Claude Code or OpenCode** — at the installer and let it do the work:
-
-```
-Install the system following https://raw.githubusercontent.com/konstantinb7/wishflow/main/INSTALL.md
-```
-
-Your agent (Claude Code or OpenCode) will preflight the environment, install Paperclip if missing, deploy the reasoning system, run a smoke check, and hand you a working pipeline. See `INSTALL.md` for the steps and `ROADMAP.md` for value priorities.
 
 ---
 
